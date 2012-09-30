@@ -90,13 +90,14 @@ var render = function () {
 };
 
 var numBars = 20;
+var boxSize = 100;
 var visualizerBars = [];
 var setupScene = function () {
-	var geometry = new THREE.CubeGeometry(200,200,200);
+	var geometry = new THREE.CubeGeometry(boxSize,boxSize,boxSize);
 	var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
 	for (var i=0; i<numBars; i++) {
 		var mesh = new THREE.Mesh(geometry, material);
-		mesh.position.x += 200 * i;
+		mesh.position.x += boxSize * i;
 		scene.add(mesh);
 		visualizerBars.push(mesh);
 	}
