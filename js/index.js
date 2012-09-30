@@ -64,9 +64,24 @@ var keypressCallback = function (e) {
 };
 
 var mouseclickCallback = function (e) {
-	// for (var i = 0; i < numBars; i++) {
-	// 	visualizerBars[i].material.color = new THREE.Color(0xFFFFFF*Math.random());		
+	//var vector = new THREE.Vector3(0, -2, 0.5);
+	// var vector = new THREE.Vector3(( (window.innerWidth/2) / window.innerWidth) * 2 - 1, - ((window/innerHeight/2) / window.innerHeight)*2 + 1, 0.5);
+	// projector.unprojectVector(vector, camera);
+
+	// var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+	// var intersects = ray.intersectObjects(visualizerBars);
+
+	// if (intersects.length > 0) {
+	// 	console.log("BAMBAMBAM");
+	// 	intersects[0].object.material.color.setHex(Math.random()*0xffffff);
+
 	// }
+
+
+
+	for (var i = 0; i < numBars; i++) {
+		visualizerBars[i].material.color = new THREE.Color(0xFFFFFF*Math.random());		
+	}
 
 		// var vector = new THREE.Vector3(( event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight)*2 + 1, 0.5);
 
@@ -83,6 +98,12 @@ var mouseclickCallback = function (e) {
 };
 
 $(document).click(function (e) {
+	var currentScore = parseInt($("#score").text());
+	var pointsEarned = Math.floor(Math.random() * 20);
+	if (Math.random() > 0.5) {
+		pointsEarned *= -1;
+	}
+	$("#score").text(currentScore+=pointsEarned);
 
 	var vector = new THREE.Vector3(( event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight)*2 + 1, 0.5);
 

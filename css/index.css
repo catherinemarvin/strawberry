@@ -3,3 +3,12 @@
 	height: 200px;
 	width: 200px;
 }
+
+#score {
+	position: absolute;
+	height: 100px;
+	width: 200px;
+	font-size: 48px;
+	right: 10px;
+	top: 50px;
+}
