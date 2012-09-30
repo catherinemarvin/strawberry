@@ -4,13 +4,16 @@ $("#start").click(function () {
 });
 
 document.addEventListener("webkitpointerlockchange", function () {
+		$("#start").slideToggle();
 		if (document.webkitPointerLockElement === document.getElementById("game")) {
 			document.addEventListener("mousemove", moveCallback, false);
 			document.addEventListener("keypress", keypressCallback, false);
+			document.addEventListener("mousedown", mouseclickCallback, false);
 		}
 		else {
 			document.removeEventListener("mousemove", moveCallback, false);
 			document.removeEventListener("keypress", keypressCallback, false);
+			document.removeEventListener("mousedown", mouseclickCallback, false);
 		}
 }, false);
 
@@ -23,7 +26,6 @@ var moveCallback = function (e) {
 
 var keypressCallback = function (e) {
 	var code = e.keyCode;
-	console.log(code);
 	if (code === 119) {
 		camera.translateZ(-50);
 	}
@@ -42,9 +44,11 @@ var keypressCallback = function (e) {
 	else if (code === 99) {
 		camera.translateY(-50);
 	}
-}
+};
 
-
+var mouseclickCallback = function () {
+	console.log("pew pew");
+};
 
 
 // ThreeJS prettiness
@@ -80,17 +84,35 @@ var animate = function () {
 };
 
 var render = function () {
-	mesh.rotation.x += 0.01;
-	mesh.rotation.y += 0.02;
+	//mesh.rotation.x += 0.01;
+	//mesh.rotation.y += 0.02;
 	renderer.render(scene,camera);
-}
+};
 
 var setupScene = function () {
 	var geometry = new THREE.CubeGeometry(200,200,200);
 	var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
 	mesh = new THREE.Mesh(geometry, material);
 	scene.add(mesh);
-}
+};
+
+$(document).bind("beat", function () {
+	var xDist = Math.random()*50;
+	var yDist = Math.random()*50;
+	var zDist = Math.random()*50;
+	if (Math.random() > 0.5) {
+		xDist *= -1;
+	}
+	if (Math.random() > 0.5) {
+		yDist *= -1;
+	}
+	if (Math.random() > 0.5) {
+		zDist *= -1;
+	}
+	mesh.translateX(xDist);
+	mesh.translateY(yDist);
+	mesh.translateZ(zDist);
+});
 
 init();
 animate();
