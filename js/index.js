@@ -84,8 +84,9 @@ var init = function () {
 
 	camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 	camera.position.z = 1200;
-	camera.position.y = 500;
+	camera.position.y = 1200;
 	camera.position.x = 1500;
+
 	scene.add(camera);
 
 	setupScene();
@@ -110,6 +111,9 @@ var render = function () {
 var numBars = 20;
 var boxSize = 100;
 var visualizerBars = [];
+var pointLight;
+var ambientLight;
+var directionalLight;
 
 var setupScene = function () {
 	var geometry = new THREE.CubeGeometry(boxSize,boxSize,boxSize);
@@ -129,6 +133,18 @@ var setupScene = function () {
 	// var startingPlatform = new THREE.Mesh(new THREE.CubeGeometry(200,1200,200), new THREE.MeshPhongMaterial({ color: new THREE.Color(0xFFFFFF*Math.random())}));
 	// startingPlatform.position.x -=200;
 	// scene.add(startingPlatform);
+
+	//pointLight = new THREE.PointLight(0xFFFFFF);
+
+	//pointLight.lookAt(visualizerBars[0].position);
+	//scene.add(pointLight);
+
+	ambientLight = new THREE.AmbientLight(0x555555);
+	scene.add(ambientLight);
+
+	directionalLight = new THREE.DirectionalLight(0xffffff);
+	directionalLight.lookAt(avatar.position);
+	scene.add(directionalLight);
 
 };
 
