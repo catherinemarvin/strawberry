@@ -60,8 +60,19 @@
     }
 
     function onLoad(e) {
-      var source = context.createMediaElementSource(audioElement);
-      var filter = context.createBiquadFilter();
+      FilterSample.play();
+      setTimeout(FilterSample.toggleFilter , 20000);
+
+    }
+
+    var FilterSample = {
+      FREQ_MUL: 7000,
+      QUAL_MUL: 30,
+      playing: false
+    };
+  FilterSample.play = function () {
+       source = context.createMediaElementSource(audioElement);
+       filter = context.createBiquadFilter();
       filter.type = 0;
       filter.frequency.value = 440;
       source.connect(filter);
@@ -69,9 +80,50 @@
       //filter.connect(analyser); 
       analyser.connect(context.destination);
       //source.connect(context.destination);
-
+      
+      
+      this.source = source;
+      this.filter = filter;
+      this.analyser = analyser;
       rafCallback();
-    }
+  };
+  FilterSample.stop = function () {
+      this.source.noteOff(0);
+  };
+  FilterSample.toggle = function () {
+      this.playing ? this.stop() : this.play();
+      this.playing = !this.playing;
+  };
+  FilterSample.changeFrequency = function (element) {
+      var minValue = 40;
+      var maxValue = context.sampleRate / 2;
+      var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
+      var multiplier = Math.pow(2, numberOfOctaves * (element.value - 1.0));
+      this.filter.frequency.value = maxValue * multiplier;
+  };
+  FilterSample.changeQuality = function (element) {
+      this.filter.Q.value = element.value * this.QUAL_MUL;
+  };
+  FilterSample.toggleFilter = function (element) {
+      console.log("here");
+      source.disconnect(0);
+      filter.disconnect(0);
+      analyser.disconnect(0);
+
+      
+      source.connect(filter);
+      filter.connect(analyser);
+      analyser.connect(context.destination);
+      setTimeout(function () {
+        source.disconnect(0);
+        filter.disconnect(0);
+        analyser.disconnect(0); 
+        source.connect(analyser);
+      //filter.connect(analyser); 
+        analyser.connect(context.destination);
+      }, 10000)
+
+  };
 
     window.addEventListener('load', onLoad, false);
 
