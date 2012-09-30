@@ -27,9 +27,6 @@
     <audio id="voice" src="test.mp3" autoplay></audio>
     
     <script>
-    
-
-    
 
     var audioElement = document.querySelector('#voice');
 
@@ -43,46 +40,26 @@
     var iterationNumber = 1;
 
     function rafCallback(time) {
-      console.log('here it is');
+
       var canvas = document.getElementById('game');
       var freqByteData = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(freqByteData);
-      var SPACER_WIDTH = 5;
-      //var numBars = Math.round(CANVAS_WIDTH / SPACER_WIDTH);
 
-      //ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      var numBars = 20;
 
-     
+      for (var i=0; i < numBars; ++i) {
+		  	visualizerBars[i].position.y = 0;
+		  }
 
-      var bandAmplitude = 0
-      for (var i = 0; i < freqByteData.length; i++ ){
-        //console.log(freqByteData[i])
-          
-          //console.log(bandAmplitude);
-          //var total = bandAmpsTotal[ Math.floor( 32 / (i - 1)) ]
-          //console.log(band[0]);
-          
-        bandAmplitude += freqByteData[i] * freqByteData[i];
-        
-      }
-      queue.push(bandAmplitude);
-      
-      if (queue.length > 32){
-        queue.splice(0,1);
-      }
+      for (var i = 0; i < numBars; ++i) {
+      	var magnitude = freqByteData[i];
+      	visualizerBars[i].position.y += magnitude * 4;
+		  }
 
-      var total = 0;
-      for(var i = 0; i < queue.length; i++){
-        total += queue[i];
-      }
-      var avg = total / queue.length;
 
-      if (bandAmplitude > 1.05 * avg){
-          $(document).trigger('beat');
-          //THESE ARE BEATZZ. DO STUFF HERE!
-      }
 
-      iterationNumber += 1;
+
+
       window.webkitRequestAnimationFrame(rafCallback, canvas);
     }
 
@@ -92,10 +69,10 @@
       filter.type = 0;
       filter.frequency.value = 440;
       source.connect(filter);
-      //source.connect(analyser);
-      filter.connect(analyser); 
-      //analyser.connect(context.destination);
-      source.connect(context.destination);
+      source.connect(analyser);
+      //filter.connect(analyser); 
+      analyser.connect(context.destination);
+      //source.connect(context.destination);
 
       rafCallback();
     }

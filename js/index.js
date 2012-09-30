@@ -89,30 +89,18 @@ var render = function () {
 	renderer.render(scene,camera);
 };
 
+var numBars = 20;
+var visualizerBars = [];
 var setupScene = function () {
 	var geometry = new THREE.CubeGeometry(200,200,200);
 	var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
-	mesh = new THREE.Mesh(geometry, material);
-	scene.add(mesh);
+	for (var i=0; i<numBars; i++) {
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.position.x += 200 * i;
+		scene.add(mesh);
+		visualizerBars.push(mesh);
+	}
 };
-
-$(document).bind("beat", function () {
-	var xDist = Math.random()*50;
-	var yDist = Math.random()*50;
-	var zDist = Math.random()*50;
-	if (Math.random() > 0.5) {
-		xDist *= -1;
-	}
-	if (Math.random() > 0.5) {
-		yDist *= -1;
-	}
-	if (Math.random() > 0.5) {
-		zDist *= -1;
-	}
-	mesh.translateX(xDist);
-	mesh.translateY(yDist);
-	mesh.translateZ(zDist);
-});
 
 init();
 animate();
