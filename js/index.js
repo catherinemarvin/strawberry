@@ -63,9 +63,41 @@ var keypressCallback = function (e) {
 	}
 };
 
-var mouseclickCallback = function () {
-	console.log("pew pew");
+var mouseclickCallback = function (e) {
+	// for (var i = 0; i < numBars; i++) {
+	// 	visualizerBars[i].material.color = new THREE.Color(0xFFFFFF*Math.random());		
+	// }
+
+		// var vector = new THREE.Vector3(( event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight)*2 + 1, 0.5);
+
+		// projector.unprojectVector(vector, camera);
+
+		// var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+		// var intersects = ray.intersectObjects(visualizerBars);
+
+		// if (intersects.length > 0) {
+		// 	console.log("PEW PEW");
+		// }
+
+
 };
+
+$(document).click(function (e) {
+
+	var vector = new THREE.Vector3(( event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight)*2 + 1, 0.5);
+
+	projector.unprojectVector(vector, camera);
+
+	var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+	var intersects = ray.intersectObjects(visualizerBars);
+
+	if (intersects.length > 0) {
+		console.log("PEW PEW");
+		intersects[0].object.material.color.setHex(Math.random()*0xffffff);
+
+	}
+
+});
 
 
 // ThreeJS prettiness
@@ -91,7 +123,8 @@ var init = function () {
 
 	setupScene();
 
-	renderer = new THREE.CanvasRenderer();
+	renderer = new THREE.WebGLRenderer();
+	renderer.shadowMapEnabled = true;
 	renderer.domElement.id = "game";
 	renderer.domElement.style.backgroundColor = "#D6F1FF";
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -114,6 +147,7 @@ var visualizerBars = [];
 var pointLight;
 var ambientLight;
 var directionalLight;
+var floor;
 
 var setupScene = function () {
 	var geometry = new THREE.CubeGeometry(boxSize,boxSize,boxSize);
@@ -121,6 +155,8 @@ var setupScene = function () {
 		var material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xFFFFFF*Math.random())});
 		var mesh = new THREE.Mesh(geometry, material);
 		mesh.position.x += boxSize * i;
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
 		scene.add(mesh);
 		visualizerBars.push(mesh);
 	}
@@ -140,11 +176,20 @@ var setupScene = function () {
 	//scene.add(pointLight);
 
 	ambientLight = new THREE.AmbientLight(0x555555);
+	ambientLight.color.setRGB(0.255,0.255,0.255);
 	scene.add(ambientLight);
 
 	directionalLight = new THREE.DirectionalLight(0xffffff);
 	directionalLight.lookAt(avatar.position);
+	directionalLight.position = camera.position;
+	directionalLight.castShadow = true;
+	//directionalLight.shadowCameraVisible = true;
 	scene.add(directionalLight);
+
+	// //floor = new THREE.Mesh(new THREE.CubeGeometry(5000,25,5000), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+	// floor.receiveShadow = false;
+	// floor.position.y+=100;
+	// scene.add(floor);
 
 };
 
